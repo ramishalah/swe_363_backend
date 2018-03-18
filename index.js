@@ -19,7 +19,7 @@ express()
   .use(bodyParser.json())
 
   // for retrieving all the students
-  .get('/students', function(req, res, next){
+  .get('/hello world', function(req, res, next){
 
     // var sql = "SELECT * FROM student";
     // con.query(sql, function (err, rows, fields) {
