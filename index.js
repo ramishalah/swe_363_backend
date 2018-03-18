@@ -21,11 +21,12 @@ express()
   // for retrieving all the students
   .get('/students', function(req, res, next){
 
-    var sql = "SELECT * FROM student";
-    con.query(sql, function (err, rows, fields) {
-      if (err) throw err;
-      res.send(rows);
-    });
+    // var sql = "SELECT * FROM student";
+    // con.query(sql, function (err, rows, fields) {
+    //   if (err) throw err;
+    //   res.send(rows);
+    // });
+      res.send("hello world");
   })
 
   // for retrieving all sections
