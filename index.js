@@ -20,12 +20,6 @@ express()
   // for retrieving all the students
   .get('/helloworld', function(req, res, next){
 
-    // var sql = "SELECT * FROM student";
-    // con.query(sql, function (err, rows, fields) {
-    //   if (err) throw err;
-    //   res.send(rows);
-    // });
-      if (err) throw err;
       res.send("hello world");
   })
 
