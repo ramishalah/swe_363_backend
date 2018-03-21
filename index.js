@@ -17,17 +17,12 @@ var app = express();
 // to parse the request body
 app.use(bodyParser.json());
 
-app.get('/helloworld', function (req, res, next) {
-
-    res.send("hello world");
-});
-
 // to  get all the faculty table
 app.get('/faculty', function (req, res) {
     var sql = 'select * from faculty';
     con.query(sql, function (err, rows, fields) {
         if (err) {
-            res.status(500).send("An error happend in the server")
+            res.status(500).send("An error happened in the server")
         } else {
             res.send(rows);
         }
