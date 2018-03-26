@@ -1,5 +1,5 @@
 const express = require('express');
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8888;
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 
@@ -169,4 +169,4 @@ app.get('/work_experience', function (req, res) {
 //   });
 // })
 
-app.listen(PORT, () => console.log(`Listening on ${ PORT }`))
+app.listen(PORT, () => console.log(`Listening on ${ PORT }`));
