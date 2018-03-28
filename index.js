@@ -125,8 +125,112 @@ app.get('/work_experience', function (req, res) {
 });
 
 // to get the a specific faculty member
-app.get('/faculty/:id', function (req, res) {
-    var sql = `select * from faculty where id_faculty = ${req.params.id}`;
+app.get('/faculty/:facultyId', function (req, res) {
+    var sql = `select * from faculty where id_faculty = ${req.params.facultyId}`;
+
+    con.query(sql, function (err, rows, fields) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(rows);
+        }
+    })
+});
+
+// to get the a specific education.
+app.get('/education/:facultyId', function (req, res) {
+    var sql = `select * from education where id_faculty = ${req.params.facultyId}`;
+
+    con.query(sql, function (err, rows, fields) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(rows);
+        }
+    })
+});
+
+// to get the a specific membership.
+app.get('/membership/:facultyId', function (req, res) {
+    var sql = `select * from membership where id_faculty = ${req.params.facultyId}`;
+
+    con.query(sql, function (err, rows, fields) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(rows);
+        }
+    })
+});
+
+// to get the a specific membership.
+app.get('/membership/:facultyId', function (req, res) {
+    var sql = `select * from membership where id_faculty = ${req.params.facultyId}`;
+
+    con.query(sql, function (err, rows, fields) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(rows);
+        }
+    })
+});
+
+// to get the a specific phone numbers.
+app.get('/phoneNumber/:facultyId', function (req, res) {
+    var sql = `select * from phone_number where id_faculty = ${req.params.facultyId}`;
+
+    con.query(sql, function (err, rows, fields) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(rows);
+        }
+    })
+});
+
+// to get the a specific publication.
+app.get('/publication/:facultyId', function (req, res) {
+    var sql = `select * from publication where id_faculty = ${req.params.facultyId}`;
+
+    con.query(sql, function (err, rows, fields) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(rows);
+        }
+    })
+});
+
+// to get the a specific skill.
+app.get('/skill/:facultyId', function (req, res) {
+    var sql = `select * from skill where id_faculty = ${req.params.facultyId}`;
+
+    con.query(sql, function (err, rows, fields) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(rows);
+        }
+    })
+});
+
+// to get the a specific work_experience.
+app.get('/workExperience/:facultyId', function (req, res) {
+    var sql = `select * from work_experience where id_faculty = ${req.params.facultyId}`;
+
+    con.query(sql, function (err, rows, fields) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(rows);
+        }
+    })
+});
+
+// to get the a specific authors.
+app.get('/author/:publicationId', function (req, res) {
+    var sql = `select * from author where id_publication = ${req.params.publicationId}`;
 
     con.query(sql, function (err, rows, fields) {
         if (err) {
