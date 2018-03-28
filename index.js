@@ -124,6 +124,34 @@ app.get('/work_experience', function (req, res) {
     })
 });
 
+// to get the whole portfolio for a specific user
+app.get('/portfolio/:id', function (req, res) {
+    var sql = `select fa.*, au.*, ed.*, mem.*, ph.*, pu.*, sk.*, wo.* 
+    from faculty fa
+    join education ed
+    on fa.${req.params.id} = ed.${req.params.id}
+    join membership mem
+    on fa.${req.params.id} = mem.${req.params.id}
+    join phone_number
+    on fa.${req.params.id} = ph.${req.params.id}
+    join skill sk
+    on fa.${req.params.id} = sk.${req.params.id}
+    join work_experience wo
+    on fa.${req.params.id} = wo.${req.params.id}
+    join publication pu
+    on fa.${req.params.id} = pu.${req.params.id}
+    join author au
+    on pu.id_publication = au.id_publication`;
+
+    con.query(sql, function (err, rows, fields) {
+        if(err) {
+            res.send(err);
+        } else {
+            res.send(rows);
+        }
+    })
+});
+
 
 //
 // .post('/addpreference', function(req, res, next){
