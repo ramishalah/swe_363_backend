@@ -2,6 +2,7 @@ const express = require('express');
 const PORT = process.env.PORT || 8888;
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
+const cors = require('cors');
 
 // connecting to the clear db database
 var con = mysql.createPool({
@@ -14,6 +15,8 @@ var con = mysql.createPool({
 
 
 var app = express();
+
+app.use(cors);
 // to parse the request body
 app.use(bodyParser.json());
 
