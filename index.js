@@ -17,6 +17,9 @@ var app = express();
 // to parse the request body
 app.use(bodyParser.json());
 
+// to serve the static files
+app.use(express.static('images'));
+
 // to  get all the faculty table
 app.get('/faculty', function (req, res) {
     var sql = 'select * from faculty';
@@ -163,18 +166,6 @@ app.get('/membership/:facultyId', function (req, res) {
     })
 });
 
-// to get the a specific membership.
-app.get('/membership/:facultyId', function (req, res) {
-    var sql = `select * from membership where id_faculty = ${req.params.facultyId}`;
-
-    con.query(sql, function (err, rows, fields) {
-        if (err) {
-            res.send(err);
-        } else {
-            res.send(rows);
-        }
-    })
-});
 
 // to get the a specific phone numbers.
 app.get('/phoneNumber/:facultyId', function (req, res) {
