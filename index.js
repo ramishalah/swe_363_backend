@@ -16,7 +16,7 @@ var con = mysql.createPool({
 
 var app = express();
 
-app.use(cors);
+app.use(cors());
 // to parse the request body
 app.use(bodyParser.json());
 
