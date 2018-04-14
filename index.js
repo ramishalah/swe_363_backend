@@ -3,6 +3,7 @@ const PORT = process.env.PORT || 8888;
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const cors = require('cors');
+var session = require('express-session');
 
 // connecting to the clear db database
 var con = mysql.createPool({
@@ -16,9 +17,18 @@ var con = mysql.createPool({
 
 var app = express();
 
+// to allow the cross origin thing.
 app.use(cors());
 // to parse the request body
 app.use(bodyParser.json());
+
+// initialize express-session to allow us track the logged-in user across sessions.
+app.use(session({
+    key: 'user_id',
+    secret: 'somerandonstuffs',
+    resave: false,
+    saveUninitialized: false
+}));
 
 // to serve the static files
 app.use(express.static('images'));
@@ -225,6 +235,19 @@ app.get('/workExperience/:facultyId', function (req, res) {
 // to get the a specific authors.
 app.get('/author/:publicationId', function (req, res) {
     var sql = `select * from author where id_publication = ${req.params.publicationId}`;
+
+    con.query(sql, function (err, rows, fields) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(rows);
+        }
+    })
+});
+
+// To search for a faculty by last name
+app.get('/searchByFacultyLastName/:lastName', function (req, res) {
+    var sql = "select * from `faculty` f where `f`.`last_name` = " + "\'" + req.params.lastName+ "\'";
 
     con.query(sql, function (err, rows, fields) {
         if (err) {
