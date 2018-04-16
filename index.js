@@ -289,25 +289,8 @@ app.get('/searchByFacultyLastName/:lastName', function (req, res) {
     })
 });
 
-// app.post('/signup', function (req, res) {
-//    var firstName = req.body.firstName;
-//    var lastName = req.body.lastName;
-//    var email = req.body.email;
-//    var password = req.body.password;
-//
-//
-//    var sql = "insert into `faculty` (`first_name`, `last_name`, `email`, `password`) values(" + "\'" +firstName + "\'" + "," + "\'" +  lastName + "\'" + "," + "\'" + email + "\'" + "," + "\'" + password + "\'"  + ")";
-//
-//    con.query(sql, function (err, rows, fields) {
-//        if(err) {
-//            res.send(err);
-//        } else {
-//            var id = rows.insertId;
-//            res.send(`${id}`);
-//        }
-//    })
-// });
 
+// For Sign up
 app.post('/signup', function (req, res) {
 
     var table_data =  {
@@ -329,6 +312,50 @@ app.post('/signup', function (req, res) {
         }
     })
 });
+
+// For sign in
+app.post('/signin', function (req, res) {
+    var sql = 'SELECT * FROM faculty where email = ?';
+
+    con.query(sql, [req.body.email],  function (err, rows, fields) {
+        if(err) {
+            res.send(err);
+        } else {
+
+            if(rows.length > 0){
+                if(req.body.password == rows[0].password){
+                    res.send(rows);
+                } else {
+                    res.status(400).send("Incorrect password");
+                }
+            } else {
+                res.status(400).send("Email does not exists");
+            }
+        }
+    })
+
+});
+
+
+
+// app.post('/signup', function (req, res) {
+//    var firstName = req.body.firstName;
+//    var lastName = req.body.lastName;
+//    var email = req.body.email;
+//    var password = req.body.password;
+//
+//
+//    var sql = "insert into `faculty` (`first_name`, `last_name`, `email`, `password`) values(" + "\'" +firstName + "\'" + "," + "\'" +  lastName + "\'" + "," + "\'" + email + "\'" + "," + "\'" + password + "\'"  + ")";
+//
+//    con.query(sql, function (err, rows, fields) {
+//        if(err) {
+//            res.send(err);
+//        } else {
+//            var id = rows.insertId;
+//            res.send(`${id}`);
+//        }
+//    })
+// });
 
 //
 // .post('/addpreference', function(req, res, next){
