@@ -3,7 +3,10 @@ const PORT = process.env.PORT || 8888;
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const cors = require('cors');
-var session = require('express-session');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
+
 
 // connecting to the clear db database
 var con = mysql.createPool({
@@ -22,13 +25,41 @@ app.use(cors());
 // to parse the request body
 app.use(bodyParser.json());
 
+// set morgan to log info about our requests for development use.
+app.use(morgan('dev'));
+
+// initialize cookie-parser to allow us access the cookies stored in the browser.
+app.use(cookieParser());
+
 // initialize express-session to allow us track the logged-in user across sessions.
 app.use(session({
-    key: 'user_id',
+    key: 'user_sid',
     secret: 'somerandonstuffs',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        expires: 600000
+    }
 }));
+
+// This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.
+// This usually happens when you stop your express server after login, your cookie still remains saved in the browser.
+app.use((req, res, next) => {
+    if (req.cookies.user_sid && !req.session.user) {
+        res.clearCookie('user_sid');
+    }
+    next();
+});
+
+
+// middleware function to check for logged-in users
+var sessionChecker = (req, res, next) => {
+    if (req.session.user && req.cookies.user_sid) {
+        res.redirect('/dashboard');
+    } else {
+        next();
+    }
+};
 
 // to serve the static files
 app.use(express.static('images'));
@@ -247,7 +278,7 @@ app.get('/author/:publicationId', function (req, res) {
 
 // To search for a faculty by last name
 app.get('/searchByFacultyLastName/:lastName', function (req, res) {
-    var sql = "select * from `faculty` f where `f`.`last_name` = " + "\'" + req.params.lastName+ "\'";
+    var sql = "select * from `faculty` f where `f`.`last_name` = " + "\'" + req.params.lastName + "\'";
 
     con.query(sql, function (err, rows, fields) {
         if (err) {
@@ -258,6 +289,46 @@ app.get('/searchByFacultyLastName/:lastName', function (req, res) {
     })
 });
 
+// app.post('/signup', function (req, res) {
+//    var firstName = req.body.firstName;
+//    var lastName = req.body.lastName;
+//    var email = req.body.email;
+//    var password = req.body.password;
+//
+//
+//    var sql = "insert into `faculty` (`first_name`, `last_name`, `email`, `password`) values(" + "\'" +firstName + "\'" + "," + "\'" +  lastName + "\'" + "," + "\'" + email + "\'" + "," + "\'" + password + "\'"  + ")";
+//
+//    con.query(sql, function (err, rows, fields) {
+//        if(err) {
+//            res.send(err);
+//        } else {
+//            var id = rows.insertId;
+//            res.send(`${id}`);
+//        }
+//    })
+// });
+
+app.post('/signup', function (req, res) {
+
+    var table_data =  {
+        first_name: req.body.firstName,
+        last_name: req.body.lastName,
+        email: req.body.email,
+        password: req.body.password
+    };
+
+
+    var sql = 'INSERT INTO faculty SET ?';
+
+    con.query(sql, table_data,  function (err, rows, fields) {
+        if(err) {
+            res.send(err);
+        } else {
+            var id = rows.insertId;
+            res.send(`${id}`);
+        }
+    })
+});
 
 //
 // .post('/addpreference', function(req, res, next){
