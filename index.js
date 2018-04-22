@@ -3,9 +3,8 @@ const PORT = process.env.PORT || 8888;
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const cors = require('cors');
-// const session = require('express-session');
-// const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
+const jwt = require('jsonwebtoken');
 
 
 // connecting to the clear db database
@@ -29,291 +28,449 @@ app.use(bodyParser.json());
 // set morgan to log info about our requests for development use.
 app.use(morgan('dev'));
 
-// // initialize cookie-parser to allow us access the cookies stored in the browser.
-// app.use(cookieParser());
-//
-// // initialize express-session to allow us track the logged-in user across sessions.
-// app.use(session({
-//     key: 'user_sid',
-//     secret: 'somerandonstuffs',
-//     resave: false,
-//     saveUninitialized: false,
-//     cookie: {
-//         expires: 600000
-//     }
-// }));
-//
-// // This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.
-// // This usually happens when you stop your express server after login, your cookie still remains saved in the browser.
-// app.use((req, res, next) => {
-//     if (req.cookies.user_sid && !req.session.user) {
-//         res.clearCookie('user_sid');
-//     }
-//     next();
-// });
-//
-//
-// // middleware function to check for logged-in users
-// var sessionChecker = (req, res, next) => {
-//     if (req.session.user && req.cookies.user_sid) {
-//         res.redirect('/dashboard');
-//     } else {
-//         next();
-//     }
-// };
 
 // to serve the static files
 app.use(express.static('images'));
 
+// app.post('/api/login', (req, res) => {
+//     // Mock user (request with data base and then you get the user back)
+//     const user = {
+//         id: 1,
+//         username: "rami",
+//         email: "rami@gmail.com"
+//     };
+//    jwt.sign({user:user}, 'helloworld', function (err, token) {
+//        res.json({
+//            token: token
+//        })
+//    });
+// });
+
+
+// Verify token
+function verifyToken(req, res, next) {
+    // Get auth header value
+    const bearerHeader = req.headers['authorization'];
+
+    // Check if bearer is undefined
+    if (bearerHeader) {
+        // Split at the space
+        const bearer = bearerHeader.split(' ');
+        // Get token from array
+        const bearerToken = bearer[1];
+        // Set the token
+        req.token = bearerToken;
+        // proceed
+        next();
+    } else {
+        // Forbidden
+        res.sendStatus(403);
+    }
+
+}
+
+
 // to  get all the faculty table
-app.get('/faculty', function (req, res) {
-    var sql = 'select * from faculty';
-    con.query(sql, function (err, rows, fields) {
+app.get('/faculty', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
         if (err) {
-            res.send(err);
+            res.sendStatus(403);
         } else {
-            res.send(rows);
+            var sql = 'select * from faculty';
+            con.query(sql, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(rows);
+                }
+            })
         }
-    })
+    });
+
+
 });
 
+
 // to  get all the admin table
-app.get('/admin', function (req, res) {
-    var sql = 'select * from admin';
-    con.query(sql, function (err, rows, fields) {
+app.get('/admin', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
         if (err) {
-            res.send(err);
+            res.sendStatus(403);
         } else {
-            res.send(rows);
+            var sql = 'select * from admin';
+            con.query(sql, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(rows);
+                }
+            })
         }
-    })
+    });
+
+
 });
 
 // to  get all the author table
-app.get('/author', function (req, res) {
-    var sql = 'select * from author';
-    con.query(sql, function (err, rows, fields) {
+app.get('/author', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
         if (err) {
-            res.send(err);
+            res.sendStatus(403);
         } else {
-            res.send(rows);
+            var sql = 'select * from author';
+            con.query(sql, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(rows);
+                }
+            })
         }
-    })
+    });
+
 });
 
 // to  get all the education table
-app.get('/education', function (req, res) {
-    var sql = 'select * from education';
-    con.query(sql, function (err, rows, fields) {
+app.get('/education', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
         if (err) {
-            res.send(err);
+            res.sendStatus(403);
         } else {
-            res.send(rows);
+            var sql = 'select * from education';
+            con.query(sql, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(rows);
+                }
+            })
         }
-    })
+    });
+
+
 });
 // to  get all the membership table
-app.get('/membership', function (req, res) {
-    var sql = 'select * from membership';
-    con.query(sql, function (err, rows, fields) {
+app.get('/membership', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
         if (err) {
-            res.send(err);
+            res.sendStatus(403);
         } else {
-            res.send(rows);
+            var sql = 'select * from membership';
+            con.query(sql, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(rows);
+                }
+            })
         }
-    })
+    });
+
 });
 
 // to  get all the phone_number table
-app.get('/phone_number', function (req, res) {
-    var sql = 'select * from phone_number';
-    con.query(sql, function (err, rows, fields) {
+app.get('/phone_number', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
         if (err) {
-            res.send(err);
+            res.sendStatus(403);
         } else {
-            res.send(rows);
+            var sql = 'select * from phone_number';
+            con.query(sql, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(rows);
+                }
+            })
         }
-    })
+    });
 });
 
 // to  get all the publication table
-app.get('/publication', function (req, res) {
-    var sql = 'select * from publication';
-    con.query(sql, function (err, rows, fields) {
+app.get('/publication', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
         if (err) {
-            res.send(err);
+            res.sendStatus(403);
         } else {
-            res.send(rows);
+            var sql = 'select * from publication';
+            con.query(sql, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(rows);
+                }
+            })
         }
-    })
+    });
+
+
 });
 
 // to  get all the skill table
-app.get('/skill', function (req, res) {
-    var sql = 'select * from skill';
-    con.query(sql, function (err, rows, fields) {
+app.get('/skill', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
         if (err) {
-            res.send(err);
+            res.sendStatus(403);
         } else {
-            res.send(rows);
+            var sql = 'select * from skill';
+            con.query(sql, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(rows);
+                }
+            })
         }
-    })
+    });
+
+
 });
 
 // to  get all the work_experience table
-app.get('/work_experience', function (req, res) {
-    var sql = 'select * from work_experience';
-    con.query(sql, function (err, rows, fields) {
+app.get('/work_experience', verifyToken, function (req, res) {
+
+    jwt.verify(req.token, 'helloworld', function (err, data) {
         if (err) {
-            res.send(err);
+            res.sendStatus(403);
         } else {
-            res.send(rows);
+            var sql = 'select * from work_experience';
+            con.query(sql, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(rows);
+                }
+            })
         }
-    })
+    });
+
+
 });
 
 // to get the a specific faculty member
 app.get('/faculty/:facultyId', function (req, res) {
-    var sql = `select * from faculty where id_faculty = ${req.params.facultyId}`;
 
-    con.query(sql, function (err, rows, fields) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
         if (err) {
-            res.send(err);
+            res.sendStatus(403);
         } else {
-            res.send(rows);
+            var sql = `select * from faculty where id_faculty = ${req.params.facultyId}`;
+
+            con.query(sql, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(rows);
+                }
+            })
         }
-    })
+    });
+
+
 });
 
 // to get the a specific education.
-app.get('/education/:facultyId', function (req, res) {
-    var sql = `select * from education where id_faculty = ${req.params.facultyId}`;
-
-    con.query(sql, function (err, rows, fields) {
+app.get('/education/:facultyId', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
         if (err) {
-            res.send(err);
+            res.sendStatus(403);
         } else {
-            res.send(rows);
+            var sql = `select * from education where id_faculty = ${req.params.facultyId}`;
+
+            con.query(sql, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(rows);
+                }
+            })
         }
-    })
+    });
+
 });
 
 // to get the a specific membership.
-app.get('/membership/:facultyId', function (req, res) {
-    var sql = `select * from membership where id_faculty = ${req.params.facultyId}`;
-
-    con.query(sql, function (err, rows, fields) {
+app.get('/membership/:facultyId', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
         if (err) {
-            res.send(err);
+            res.sendStatus(403);
         } else {
-            res.send(rows);
+            var sql = `select * from membership where id_faculty = ${req.params.facultyId}`;
+
+            con.query(sql, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(rows);
+                }
+            })
         }
-    })
+    });
+
+
 });
 
 
 // to get the a specific phone numbers.
-app.get('/phoneNumber/:facultyId', function (req, res) {
-    var sql = `select * from phone_number where id_faculty = ${req.params.facultyId}`;
-
-    con.query(sql, function (err, rows, fields) {
+app.get('/phoneNumber/:facultyId', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
         if (err) {
-            res.send(err);
+            res.sendStatus(403);
         } else {
-            res.send(rows);
+            var sql = `select * from phone_number where id_faculty = ${req.params.facultyId}`;
+
+            con.query(sql, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(rows);
+                }
+            })
         }
-    })
+    });
 });
 
 // to get the a specific publication.
-app.get('/publication/:facultyId', function (req, res) {
-    var sql = `select * from publication where id_faculty = ${req.params.facultyId}`;
-
-    con.query(sql, function (err, rows, fields) {
+app.get('/publication/:facultyId', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
         if (err) {
-            res.send(err);
+            res.sendStatus(403);
         } else {
-            res.send(rows);
+
+            var sql = `select * from publication where id_faculty = ${req.params.facultyId}`;
+
+            con.query(sql, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(rows);
+                }
+            })
         }
-    })
+    });
+
+
 });
 
 // to get the a specific skill.
-app.get('/skill/:facultyId', function (req, res) {
-    var sql = `select * from skill where id_faculty = ${req.params.facultyId}`;
-
-    con.query(sql, function (err, rows, fields) {
+app.get('/skill/:facultyId', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
         if (err) {
-            res.send(err);
+            res.sendStatus(403);
         } else {
-            res.send(rows);
+            var sql = `select * from skill where id_faculty = ${req.params.facultyId}`;
+
+            con.query(sql, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(rows);
+                }
+            })
         }
-    })
+    });
+
 });
 
 // to get the a specific work_experience.
-app.get('/workExperience/:facultyId', function (req, res) {
-    var sql = `select * from work_experience where id_faculty = ${req.params.facultyId}`;
-
-    con.query(sql, function (err, rows, fields) {
+app.get('/workExperience/:facultyId', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
         if (err) {
-            res.send(err);
+            res.sendStatus(403);
         } else {
-            res.send(rows);
+            var sql = `select * from work_experience where id_faculty = ${req.params.facultyId}`;
+
+            con.query(sql, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(rows);
+                }
+            })
         }
-    })
+    });
+
 });
 
 // to get the a specific authors.
-app.get('/author/:publicationId', function (req, res) {
-    var sql = `select * from author where id_publication = ${req.params.publicationId}`;
-
-    con.query(sql, function (err, rows, fields) {
+app.get('/author/:publicationId', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
         if (err) {
-            res.send(err);
+            res.sendStatus(403);
         } else {
-            res.send(rows);
+            var sql = `select * from author where id_publication = ${req.params.publicationId}`;
+
+            con.query(sql, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(rows);
+                }
+            })
         }
-    })
+    });
+
 });
 
 // To search for a faculty by last name
-app.get('/searchByFacultyLastName/:lastName', function (req, res) {
-    var sql = "select * from `faculty` f where `f`.`last_name` = " + "\'" + req.params.lastName + "\'" + " AND `f`.`approved` = 1";
-
-    con.query(sql, function (err, rows, fields) {
+app.get('/searchByFacultyLastName/:lastName', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
         if (err) {
-            res.send(err);
+            res.sendStatus(403);
         } else {
-            res.send(rows);
+            var sql = "select * from `faculty` f where `f`.`last_name` = " + "\'" + req.params.lastName + "\'" + " AND `f`.`approved` = 1";
+
+            con.query(sql, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send(rows);
+                }
+            })
         }
-    })
+    });
+
 });
 
 // To approve a specific faculty
-app.put('/approveFaculty', function (req, res) {
-    var sql = 'UPDATE `faculty` SET `approved` = 1 WHERE `id_faculty` = ?';
-
-    con.query(sql, [req.body.id_faculty], function (err, rows, fields) {
-        if (parseInt(rows.affectedRows) == 0) {
-            res.status(400).send("Id not found");
+app.put('/approveFaculty', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
         } else {
-            res.send("Successful");
+            var sql = 'UPDATE `faculty` SET `approved` = 1 WHERE `id_faculty` = ?';
+
+            con.query(sql, [req.body.id_faculty], function (err, rows, fields) {
+                if (parseInt(rows.affectedRows) == 0) {
+                    res.status(400).send("Id not found");
+                } else {
+                    res.send("Successful");
+                }
+            })
         }
-    })
+    });
+
 });
 
 // To approve a specific faculty
-app.put('/disapproveFaculty', function (req, res) {
-    var sql = 'UPDATE `faculty` SET `approved` = 0 WHERE `id_faculty` = ?';
-
-    con.query(sql, [req.body.id_faculty], function (err, rows, fields) {
-        if (parseInt(rows.affectedRows) == 0) {
-            res.status(400).send("Id not found");
+app.put('/disapproveFaculty', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
         } else {
-            res.send("Successful");
+
+            var sql = 'UPDATE `faculty` SET `approved` = 0 WHERE `id_faculty` = ?';
+
+            con.query(sql, [req.body.id_faculty], function (err, rows, fields) {
+                if (parseInt(rows.affectedRows) == 0) {
+                    res.status(400).send("Id not found");
+                } else {
+                    res.send("Successful");
+                }
+            })
         }
-    })
+    });
+
 });
 
 
@@ -335,13 +492,19 @@ app.post('/signup', function (req, res) {
             res.send(err);
         } else {
             var id = rows.insertId;
-            res.send(`${id}`);
+            jwt.sign({data: id}, 'helloworld', function (err, token) {
+                res.json({
+                    token: token,
+                    id_faculty: id
+                })
+            });
         }
     })
 });
 
 // For sign in
 app.post('/signin', function (req, res) {
+
     var sql = 'SELECT * FROM faculty where email = ?';
 
     con.query(sql, [req.body.email], function (err, rows, fields) {
@@ -351,7 +514,12 @@ app.post('/signin', function (req, res) {
 
             if (rows.length > 0) {
                 if (req.body.password == rows[0].password) {
-                    res.send(rows);
+                    jwt.sign({data: rows[0].id_faculty}, 'helloworld', function (err, token) {
+                        res.json({
+                            token: token,
+                            id_faculty: rows[0].id_faculty
+                        })
+                    });
                 } else {
                     res.status(400).send("Incorrect password");
                 }
