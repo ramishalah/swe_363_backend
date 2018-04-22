@@ -3,8 +3,8 @@ const PORT = process.env.PORT || 8888;
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const cors = require('cors');
-const session = require('express-session');
-const cookieParser = require('cookie-parser');
+// const session = require('express-session');
+// const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 
 
@@ -25,41 +25,42 @@ app.use(cors());
 // to parse the request body
 app.use(bodyParser.json());
 
+
 // set morgan to log info about our requests for development use.
 app.use(morgan('dev'));
 
-// initialize cookie-parser to allow us access the cookies stored in the browser.
-app.use(cookieParser());
-
-// initialize express-session to allow us track the logged-in user across sessions.
-app.use(session({
-    key: 'user_sid',
-    secret: 'somerandonstuffs',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        expires: 600000
-    }
-}));
-
-// This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.
-// This usually happens when you stop your express server after login, your cookie still remains saved in the browser.
-app.use((req, res, next) => {
-    if (req.cookies.user_sid && !req.session.user) {
-        res.clearCookie('user_sid');
-    }
-    next();
-});
-
-
-// middleware function to check for logged-in users
-var sessionChecker = (req, res, next) => {
-    if (req.session.user && req.cookies.user_sid) {
-        res.redirect('/dashboard');
-    } else {
-        next();
-    }
-};
+// // initialize cookie-parser to allow us access the cookies stored in the browser.
+// app.use(cookieParser());
+//
+// // initialize express-session to allow us track the logged-in user across sessions.
+// app.use(session({
+//     key: 'user_sid',
+//     secret: 'somerandonstuffs',
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//         expires: 600000
+//     }
+// }));
+//
+// // This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.
+// // This usually happens when you stop your express server after login, your cookie still remains saved in the browser.
+// app.use((req, res, next) => {
+//     if (req.cookies.user_sid && !req.session.user) {
+//         res.clearCookie('user_sid');
+//     }
+//     next();
+// });
+//
+//
+// // middleware function to check for logged-in users
+// var sessionChecker = (req, res, next) => {
+//     if (req.session.user && req.cookies.user_sid) {
+//         res.redirect('/dashboard');
+//     } else {
+//         next();
+//     }
+// };
 
 // to serve the static files
 app.use(express.static('images'));
@@ -278,7 +279,7 @@ app.get('/author/:publicationId', function (req, res) {
 
 // To search for a faculty by last name
 app.get('/searchByFacultyLastName/:lastName', function (req, res) {
-    var sql = "select * from `faculty` f where `f`.`last_name` = " + "\'" + req.params.lastName + "\'";
+    var sql = "select * from `faculty` f where `f`.`last_name` = " + "\'" + req.params.lastName + "\'" + " AND `f`.`approved` = 1";
 
     con.query(sql, function (err, rows, fields) {
         if (err) {
@@ -289,11 +290,37 @@ app.get('/searchByFacultyLastName/:lastName', function (req, res) {
     })
 });
 
+// To approve a specific faculty
+app.put('/approveFaculty', function (req, res) {
+    var sql = 'UPDATE `faculty` SET `approved` = 1 WHERE `id_faculty` = ?';
+
+    con.query(sql, [req.body.id_faculty], function (err, rows, fields) {
+        if (parseInt(rows.affectedRows) == 0) {
+            res.status(400).send("Id not found");
+        } else {
+            res.send("Successful");
+        }
+    })
+});
+
+// To approve a specific faculty
+app.put('/disapproveFaculty', function (req, res) {
+    var sql = 'UPDATE `faculty` SET `approved` = 0 WHERE `id_faculty` = ?';
+
+    con.query(sql, [req.body.id_faculty], function (err, rows, fields) {
+        if (parseInt(rows.affectedRows) == 0) {
+            res.status(400).send("Id not found");
+        } else {
+            res.send("Successful");
+        }
+    })
+});
+
 
 // For Sign up
 app.post('/signup', function (req, res) {
 
-    var table_data =  {
+    var table_data = {
         first_name: req.body.firstName,
         last_name: req.body.lastName,
         email: req.body.email,
@@ -303,8 +330,8 @@ app.post('/signup', function (req, res) {
 
     var sql = 'INSERT INTO faculty SET ?';
 
-    con.query(sql, table_data,  function (err, rows, fields) {
-        if(err) {
+    con.query(sql, table_data, function (err, rows, fields) {
+        if (err) {
             res.send(err);
         } else {
             var id = rows.insertId;
@@ -317,25 +344,25 @@ app.post('/signup', function (req, res) {
 app.post('/signin', function (req, res) {
     var sql = 'SELECT * FROM faculty where email = ?';
 
-    con.query(sql, [req.body.email],  function (err, rows, fields) {
-        if(err) {
+    con.query(sql, [req.body.email], function (err, rows, fields) {
+        if (err) {
             res.send(err);
         } else {
 
-            if(rows.length > 0){
-                if(req.body.password == rows[0].password){
+            if (rows.length > 0) {
+                if (req.body.password == rows[0].password) {
                     res.send(rows);
                 } else {
                     res.status(400).send("Incorrect password");
                 }
             } else {
+                console.log(rows);
                 res.status(400).send("Email does not exists");
             }
         }
     })
 
 });
-
 
 
 // app.post('/signup', function (req, res) {
