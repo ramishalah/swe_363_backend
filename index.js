@@ -473,6 +473,28 @@ app.put('/disapproveFaculty', verifyToken, function (req, res) {
 
 });
 
+// To get all the appending faculty
+app.get('/appendingPortfolio', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+            var sql = 'SELECT * from faculty WHERE approved = 0';
+
+            con.query(sql, function (err, rows, fields) {
+                if(err) {
+                    res.send(err);
+                } else {
+                    res.send(rows);
+                }
+            })
+
+
+        }
+    });
+});
+
+
 
 // For Sign up
 app.post('/signup', function (req, res) {
