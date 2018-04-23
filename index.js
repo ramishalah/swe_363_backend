@@ -555,6 +555,27 @@ app.put('/editMembership', verifyToken, function (req, res) {
     });
 });
 
+// to delete a membership
+app.delete('/deleteMembership', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+            var sql = 'DELETE FROM membership WHERE id_membership = ? AND id_faculty = ?';
+
+            con.query(sql, [req.body.id_membership, data.data], function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
+        }
+    });
+});
+
 
 
 
@@ -615,6 +636,27 @@ app.put('/editPhonenumber', verifyToken, function (req, res) {
     });
 });
 
+// to delete a phone number
+app.delete('/deletePhoneNumber', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+            var sql = 'DELETE FROM phone_number WHERE id_phone_number = ? AND id_faculty = ?';
+
+            con.query(sql, [req.body.id_phone_number, data.data], function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
+        }
+    });
+});
+
 
 // To add an author for a specific publication
 app.post('/addAuthor', verifyToken, function (req, res) {
@@ -662,6 +704,27 @@ app.put('/editAuthor', verifyToken, function (req, res) {
             var sql = 'UPDATE author SET ? WHERE id_author = ? AND id_publication = ?';
 
             con.query(sql, [table_data, req.body.id_author, req.body.id_publication], function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
+        }
+    });
+});
+
+// to delete an author
+app.delete('/deleteAuthor', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+            var sql = 'DELETE FROM author WHERE id_author = ? AND id_publication = ?';
+
+            con.query(sql, [req.body.id_author, req.body.id_publication], function (err, rows, fields) {
                 if (err) {
                     res.send(err);
                 } else {
@@ -740,6 +803,27 @@ app.put('/editPublication', verifyToken, function (req, res) {
     });
 });
 
+// to delete a publication
+app.delete('/deletePublication', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+            var sql = 'DELETE FROM publication WHERE id_publication = ? AND id_faculty = ?';
+
+            con.query(sql, [req.body.id_publication, data.data], function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
+        }
+    });
+});
+
 // To add a work_experience for a specific faculty
 app.post('/addWorkExperience', verifyToken, function (req, res) {
     jwt.verify(req.token, 'helloworld', function (err, data) {
@@ -804,6 +888,27 @@ app.put('/editWorkExperience', verifyToken, function (req, res) {
     });
 });
 
+// to delete a work experience
+app.delete('/deleteWorkExperience', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+            var sql = 'DELETE FROM work_experience WHERE id_work_experience = ? AND id_faculty = ?';
+
+            con.query(sql, [req.body.id_work_experience, data.data], function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
+        }
+    });
+});
+
 // To add a skill for a specific faculty
 app.post('/addSkill', verifyToken, function (req, res) {
     jwt.verify(req.token, 'helloworld', function (err, data) {
@@ -846,6 +951,27 @@ app.put('/editSkill', verifyToken, function (req, res) {
             var sql = 'UPDATE skill SET ? WHERE id_skill = ? AND id_faculty = ?';
 
             con.query(sql, [table_data, req.body.id_skill, data.data], function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
+        }
+    });
+});
+
+// to delete a skill
+app.delete('/deleteSkill', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+            var sql = 'DELETE FROM skill WHERE id_skill = ? AND id_faculty = ?';
+
+            con.query(sql, [req.body.id_skill, data.data], function (err, rows, fields) {
                 if (err) {
                     res.send(err);
                 } else {
@@ -920,6 +1046,27 @@ app.put('/editEducation', verifyToken, function (req, res) {
     });
 });
 
+// to delete an education
+app.delete('/deleteEducation', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+            var sql = 'DELETE FROM education WHERE id_education = ? AND id_faculty = ?';
+
+            con.query(sql, [req.body.id_education, data.data], function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
+        }
+    });
+});
+
 // to edit a faculty
 app.put('/editFaculty', verifyToken, function (req, res) {
     jwt.verify(req.token, 'helloworld', function (err, data) {
@@ -945,7 +1092,7 @@ app.put('/editFaculty', verifyToken, function (req, res) {
                 is_photo_visible: req.body.is_photo_visible
             };
 
-            var sql = 'UPDATE education SET ? WHERE id_faculty = ?';
+            var sql = 'UPDATE faculty SET ? WHERE id_faculty = ?';
 
             con.query(sql, [table_data, data.data], function (err, rows, fields) {
                 if (err) {
