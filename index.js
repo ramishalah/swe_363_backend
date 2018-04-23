@@ -248,7 +248,7 @@ app.get('/work_experience', verifyToken, function (req, res) {
 });
 
 // to get the a specific faculty member
-app.get('/faculty/:facultyId', function (req, res) {
+app.get('/faculty/:facultyId', verifyToken, function (req, res) {
 
     jwt.verify(req.token, 'helloworld', function (err, data) {
         if (err) {
@@ -526,6 +526,39 @@ app.post('/addMembership', verifyToken, function (req, res) {
     });
 });
 
+// to edit a membership
+app.put('/editMembership', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+            var table_data = {
+                position: req.body.position,
+                url: req.body.url,
+                name: req.body.name,
+                expire_date: req.body.expire_date,
+                is_visible: req.body.is_visible
+            };
+
+            var sql = 'UPDATE membership SET ? WHERE id_membership = ? AND id_faculty = ?';
+
+            con.query(sql, [table_data, req.body.id_membership, data.data], function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
+        }
+    });
+});
+
+
+
+
+
 // To add a phone number for a specific faculty
 app.post('/addPhonenumber', verifyToken, function (req, res) {
     jwt.verify(req.token, 'helloworld', function (err, data) {
@@ -555,6 +588,34 @@ app.post('/addPhonenumber', verifyToken, function (req, res) {
     });
 });
 
+// to edit a phone number
+app.put('/editPhonenumber', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+
+            var table_data = {
+                number: req.body.number,
+                is_visible: req.body.is_visible
+            };
+
+            var sql = 'UPDATE phone_number SET ? WHERE id_phone_number = ? AND id_faculty = ?';
+
+            con.query(sql, [table_data, req.body.id_phone_number, data.data], function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
+        }
+    });
+});
+
+
 // To add an author for a specific publication
 app.post('/addAuthor', verifyToken, function (req, res) {
     jwt.verify(req.token, 'helloworld', function (err, data) {
@@ -581,6 +642,34 @@ app.post('/addAuthor', verifyToken, function (req, res) {
             })
 
 
+        }
+    });
+});
+
+// to edit an author
+app.put('/editAuthor', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+
+            var table_data = {
+                first_name: req.body.first_name,
+                last_name: req.body.last_name,
+                is_visible: req.body.is_visible
+            };
+
+            var sql = 'UPDATE author SET ? WHERE id_author = ? AND id_publication = ?';
+
+            con.query(sql, [table_data, req.body.id_author, req.body.id_publication], function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
         }
     });
 });
@@ -619,6 +708,38 @@ app.post('/addPublication', verifyToken, function (req, res) {
     });
 });
 
+// to edit a publication
+app.put('/editPublication', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+
+            var table_data = {
+                date: req.body.date,
+                abstract: req.body.abstract,
+                title: req.body.title,
+                url: req.body.url,
+                issn: req.body.issn,
+                number_of_pages: req.body.number_of_pages,
+                is_visible: req.body.is_visible
+            };
+
+            var sql = 'UPDATE publication SET ? WHERE id_publication = ? AND id_faculty = ?';
+
+            con.query(sql, [table_data, req.body.id_publication, data.data], function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
+        }
+    });
+});
+
 // To add a work_experience for a specific faculty
 app.post('/addWorkExperience', verifyToken, function (req, res) {
     jwt.verify(req.token, 'helloworld', function (err, data) {
@@ -652,6 +773,37 @@ app.post('/addWorkExperience', verifyToken, function (req, res) {
     });
 });
 
+// to edit a work experience
+app.put('/editWorkExperience', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+
+            var table_data = {
+                description: req.body.description,
+                start_date: req.body.start_date,
+                end_date: req.body.end_date,
+                position: req.body.position,
+                company_name: req.body.company_name,
+                is_visible: req.body.is_visible
+            };
+
+            var sql = 'UPDATE work_experience SET ? WHERE id_work_experience = ? AND id_faculty = ?';
+
+            con.query(sql, [table_data, req.body.id_work_experience, data.data], function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
+        }
+    });
+});
+
 // To add a skill for a specific faculty
 app.post('/addSkill', verifyToken, function (req, res) {
     jwt.verify(req.token, 'helloworld', function (err, data) {
@@ -675,6 +827,33 @@ app.post('/addSkill', verifyToken, function (req, res) {
             })
 
 
+        }
+    });
+});
+
+// to edit a skill
+app.put('/editSkill', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+
+            var table_data = {
+                name: req.body.name,
+                is_visible: req.body.is_visible
+            };
+
+            var sql = 'UPDATE skill SET ? WHERE id_skill = ? AND id_faculty = ?';
+
+            con.query(sql, [table_data, req.body.id_skill, data.data], function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
         }
     });
 });
@@ -709,6 +888,80 @@ app.post('/addEducation', verifyToken, function (req, res) {
         }
     });
 });
+
+// to edit a skill
+app.put('/editEducation', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+
+            var table_data = {
+                description: req.body.description,
+                start_date: req.body.start_date,
+                end_date: req.body.end_date,
+                specialization: req.body.specialization,
+                university: req.body.university,
+                is_visible: req.body.is_visible
+            };
+
+            var sql = 'UPDATE education SET ? WHERE id_education = ? AND id_faculty = ?';
+
+            con.query(sql, [table_data, req.body.id_education, data.data], function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
+        }
+    });
+});
+
+// to edit a faculty
+app.put('/editFaculty', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+
+            var table_data = {
+                first_name: req.body.first_name,
+                last_name: req.body.last_name,
+                short_biography: req.body.short_biography,
+                office_location: req.body.office_location,
+                email: req.body.email,
+                department: req.body.department,
+                website_url: req.body.website_url,
+                is_first_name_visible: req.body.is_first_name_visible,
+                is_last_name_visible: req.body.is_last_name_visible,
+                is_short_biography_visible: req.body.is_short_biography_visible,
+                is_office_location_visible: req.body.is_office_location_visible,
+                is_email_visible: req.body.is_email_visible,
+                is_department_visible: req.body.is_department_visible,
+                is_website_url_visible: req.body.is_website_url_visible,
+                is_photo_visible: req.body.is_photo_visible
+            };
+
+            var sql = 'UPDATE education SET ? WHERE id_faculty = ?';
+
+            con.query(sql, [table_data, data.data], function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
+        }
+    });
+});
+
+
+
 
 
 
