@@ -482,7 +482,7 @@ app.get('/appendingPortfolio', verifyToken, function (req, res) {
             var sql = 'SELECT * from faculty WHERE approved = 0';
 
             con.query(sql, function (err, rows, fields) {
-                if(err) {
+                if (err) {
                     res.send(err);
                 } else {
                     res.send(rows);
@@ -493,6 +493,223 @@ app.get('/appendingPortfolio', verifyToken, function (req, res) {
         }
     });
 });
+
+// To add a membership for a specific faculty
+app.post('/addMembership', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+            var table_data = {
+                position: req.body.position,
+                url: req.body.url,
+                name: req.body.name,
+                expire_date: req.body.expire_date,
+                id_faculty: data.data
+            };
+
+
+            var sql = 'INSERT INTO membership SET ?';
+
+            con.query(sql, table_data, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
+
+
+        }
+    });
+});
+
+// To add a phone number for a specific faculty
+app.post('/addPhonenumber', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+            var table_data = {
+                number: req.body.number,
+                id_faculty: data.data
+            };
+
+
+            var sql = 'INSERT INTO phone_number SET ?';
+
+            con.query(sql, table_data, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
+
+
+        }
+    });
+});
+
+// To add an author for a specific publication
+app.post('/addAuthor', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+            var table_data = {
+                first_name: req.body.first_name,
+                last_name: req.body.last_name,
+                id_publication: req.body.id_publication
+            };
+
+
+            var sql = 'INSERT INTO author SET ?';
+
+            con.query(sql, table_data, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
+
+
+        }
+    });
+});
+
+// To add a publication for a specific faculty
+app.post('/addPublication', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+            var table_data = {
+                date: req.body.date,
+                abstract: req.body.abstract,
+                title: req.body.title,
+                url: req.body.url,
+                issn: req.body.issn,
+                number_of_pages: req.body.number_of_pages,
+                id_faculty: data.data
+            };
+
+
+            var sql = 'INSERT INTO publication SET ?';
+
+            con.query(sql, table_data, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
+
+
+        }
+    });
+});
+
+// To add a work_experience for a specific faculty
+app.post('/addWorkExperience', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+            var table_data = {
+                description: req.body.description,
+                start_date: req.body.start_date,
+                end_date: req.body.end_date,
+                position: req.body.position,
+                company_name: req.body.company_name,
+                id_faculty: data.data
+            };
+
+
+            var sql = 'INSERT INTO work_experience SET ?';
+
+            con.query(sql, table_data, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
+
+
+        }
+    });
+});
+
+// To add a skill for a specific faculty
+app.post('/addSkill', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+            var table_data = {
+                name: req.body.name,
+                id_faculty: data.data
+            };
+            var sql = 'INSERT INTO skill SET ?';
+
+            con.query(sql, table_data, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
+
+
+        }
+    });
+});
+
+// To add an education for a specific faculty
+app.post('/addEducation', verifyToken, function (req, res) {
+    jwt.verify(req.token, 'helloworld', function (err, data) {
+        if (err) {
+            res.sendStatus(403);
+        } else {
+            var table_data = {
+                description: req.body.description,
+                start_date: req.body.start_date,
+                end_date: req.body.end_date,
+                specialization: req.body.specialization,
+                university: req.body.university,
+                id_faculty: data.data
+            };
+            var sql = 'INSERT INTO education SET ?';
+
+            con.query(sql, table_data, function (err, rows, fields) {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.json({
+                        message: "Successful"
+                    })
+                }
+            })
+
+
+        }
+    });
+});
+
 
 
 
