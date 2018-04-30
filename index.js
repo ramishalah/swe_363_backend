@@ -413,22 +413,16 @@ app.get('/author/:publicationId', verifyToken, function (req, res) {
 });
 
 // To search for a faculty by last name
-app.get('/searchByFacultyLastName/:lastName', verifyToken, function (req, res) {
-    jwt.verify(req.token, 'helloworld', function (err, data) {
-        if (err) {
-            res.sendStatus(403);
-        } else {
-            var sql = "select * from `faculty` f where `f`.`last_name` = " + "\'" + req.params.lastName + "\'" + " AND `f`.`approved` = 1";
+app.get('/searchByFacultyLastName/:lastName', function (req, res) {
+    var sql = "select * from `faculty` f where `f`.`last_name` = " + "\'" + req.params.lastName + "\'" + " AND `f`.`approved` = 1";
 
-            con.query(sql, function (err, rows, fields) {
-                if (err) {
-                    res.send(err);
-                } else {
-                    res.send(rows);
-                }
-            })
+    con.query(sql, function (err, rows, fields) {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(rows);
         }
-    });
+    })
 
 });
 
@@ -575,9 +569,6 @@ app.delete('/deleteMembership', verifyToken, function (req, res) {
         }
     });
 });
-
-
-
 
 
 // To add a phone number for a specific faculty
@@ -1106,11 +1097,6 @@ app.put('/editFaculty', verifyToken, function (req, res) {
         }
     });
 });
-
-
-
-
-
 
 
 // For Sign up
